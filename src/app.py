@@ -3,7 +3,7 @@ import pickle
 
 app = FastAPI()
 
-# load model
+# ✅ load once (important)
 model = pickle.load(open("model.pkl", "rb"))
 vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
 
@@ -18,10 +18,9 @@ def predict(text: str):
     # greeting
     if text_lower in ["hi", "hello", "hey"]:
         return {
-            "response": "Hello 👋 Aamish Scam Detector here! Enter your message to check!"
+            "response": "Hello 👋 Aamish here! How can I help you today?"
         }
 
-    # prediction
     vec = vectorizer.transform([text])
     pred = model.predict(vec)[0]
 
