@@ -143,10 +143,11 @@ async def whatsapp_reply(request: Request):
                     "💬 Feel free to send another message for verification."
                 )
 
-        return Response(
-            content=f"<Response><Message>{reply}</Message></Response>",
-            media_type="application/xml"
-        )
+       return Response(
+         content=f"<Response><Message>{reply}</Message></Response>",
+           media_type="application/xml",
+            headers={"Content-Type": "text/xml"}
+             )
 
     except Exception as e:
         return Response(
