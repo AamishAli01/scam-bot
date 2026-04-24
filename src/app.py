@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import Response
+from twilio.twiml.messaging_response import MessagingResponse
 import re
 
 app = FastAPI()
@@ -37,7 +38,7 @@ async def whatsapp_reply(request: Request):
 
         total_messages += 1
 
-        # ✅ Greeting (FIXED)
+        # ✅ Greeting (UNCHANGED)
         if raw_lower in ["hi", "hello", "hey"]:
             reply = (
                 "Hello 👋\n"
@@ -69,10 +70,11 @@ async def whatsapp_reply(request: Request):
                         "You cannot use abusive language towards my developer.\n\n"
                         "Please keep the conversation respectful. 😠"
                     )
-                    return Response(
-                        content=f"<Response><Message>{reply}</Message></Response>",
-                        media_type="application/xml"
-                    )
+
+                    twilio_resp = MessagingResponse()
+                    twilio_resp.message(reply)
+
+                    return Response(str(twilio_resp), media_type="text/xml")
 
             # 🔥 SCAM DETECTION
             scam_keywords = [
@@ -80,13 +82,11 @@ async def whatsapp_reply(request: Request):
                 "click","link","urgent","offer","cash",
                 "reward","gift","congratulations","selected",
 
-                # phishing
                 "verify","account","verification","unauthorized",
                 "login attempt","suspended","secure link",
                 "bank","security alert","update","confirm identity",
                 "limited time","24 hours",
 
-                # Urdu
                 "mubarak","inaam","hasil","rabta","foran",
                 "jeeto","bisp","rupay","maloomat"
             ]
@@ -118,15 +118,20 @@ async def whatsapp_reply(request: Request):
                     "💬 Feel free to send another message for verification."
                 )
 
-        # ✅ FIXED RETURN (proper indentation)
+        # ✅ FINAL TWILIO RESPONSE
+        twilio_resp = MessagingResponse()
+        twilio_resp.message(reply)
+
         return Response(
-            content=f"<Response><Message>{reply}</Message></Response>",
-            media_type="application/xml",
-            headers={"Content-Type": "text/xml"}
+            content=str(twilio_resp),
+            media_type="text/xml"
         )
 
     except Exception as e:
+        twilio_resp = MessagingResponse()
+        twilio_resp.message(f"Error: {str(e)}")
+
         return Response(
-            content=f"<Response><Message>Error: {str(e)}</Message></Response>",
-            media_type="application/xml"
+            content=str(twilio_resp),
+            media_type="text/xml"
         )
