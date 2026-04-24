@@ -1,186 +1,226 @@
-# SMS Spam Collection v1
+# 📱 Scam Detection WhatsApp Bot
 
-## Technical Documentation & Dataset Specification
-
----
-
-## 1. Executive Summary
-
-The **SMS Spam Collection v1** is a curated, labeled corpus of SMS messages developed to support research and development in **spam detection, machine learning, and natural language processing (NLP)**.
-
-The dataset comprises **5,574 real-world SMS messages in English**, each annotated as either **ham (legitimate)** or **spam (unsolicited/malicious)**. It serves as a benchmark dataset for building and evaluating classification models, particularly in resource-constrained and text-based environments such as mobile communication systems.
+A production-ready **WhatsApp chatbot** that detects scam messages in real-time using a deployed API. Built with **FastAPI**, deployed on **Railway**, and integrated with **Twilio WhatsApp Sandbox**.
 
 ---
 
-## 2. Dataset Overview
+## 🚀 Overview
 
-| Attribute      | Description                   |
-| -------------- | ----------------------------- |
-| Domain         | SMS / Text Messaging          |
-| Language       | English                       |
-| Total Messages | 5,574                         |
-| Classes        | Ham, Spam                     |
-| Label Type     | Binary Classification         |
-| Primary Use    | Spam Detection / NLP Research |
+This project allows users to send a message via WhatsApp and instantly receive a response indicating whether the message is:
+
+* ⚠️ **Scam**
+* ✅ **Safe**
+
+The system is designed to be lightweight, scalable, and easily extendable to AI-based models.
 
 ---
 
-## 3. Data Acquisition & Integration
+## ✨ Features
 
-The dataset has been constructed through the aggregation of multiple publicly accessible and research-grade sources, ensuring diversity and realism in message patterns.
-
-### 3.1 Source Breakdown
-
-* **Grumbletext Spam Reports (UK)**
-  Approximately 425 spam messages manually extracted from public user complaints. This process required intensive manual filtering and validation.
-
-* **Academic Corpus (Caroline Tagg, PhD Thesis)**
-  Around 450 legitimate messages collected under controlled academic conditions.
-
-* **NUS SMS Corpus (National University of Singapore)**
-  A subset of 3,375 legitimate messages contributed by volunteers, primarily students, ensuring natural conversational data.
-
-* **SMS Spam Corpus v0.1 Big**
-  Includes 1,002 ham messages and 322 spam messages from prior research datasets.
+* 📲 WhatsApp Bot Integration (Twilio)
+* ⚡ FastAPI backend (high performance)
+* ☁️ Deployed on Railway (live API)
+* 🧠 Rule-based scam detection (upgradeable to AI)
+* 💬 Greeting system ("Hi", "Hello", etc.)
+* 🔁 Real-time response system
+* 🛡️ Error handling & crash protection
 
 ---
 
-## 4. Statistical Distribution
+## 🏗️ Tech Stack
 
-| Class | Count | Proportion |
-| ----- | ----: | ---------: |
-| Ham   | 4,827 |      86.6% |
-| Spam  |   747 |      13.4% |
-
-### Key Observations:
-
-* The dataset is **imbalanced**, reflecting real-world conditions where spam is less frequent.
-* Suitable for testing **class imbalance handling techniques** such as resampling, weighting, or anomaly detection.
+* **Backend:** FastAPI
+* **Deployment:** Railway
+* **Messaging API:** Twilio WhatsApp Sandbox
+* **Language:** Python 3.11+
 
 ---
 
-## 5. Data Structure & Format
-
-Each record in the dataset is represented as a single line containing:
+## 📂 Project Structure
 
 ```
-<label> <message>
+scam-bot/
+│
+├── src/
+│   └── app.py          # Main FastAPI application
+│
+├── requirements.txt    # Dependencies
+├── Procfile            # Deployment config
+└── README.md           # Documentation
 ```
 
-* **Label**: `ham` or `spam`
-* **Message**: Raw SMS text (unprocessed)
+---
 
-### Example Entries:
+## ⚙️ Setup & Installation
 
-```id="c0h1x2"
-ham    What are you doing? How are you?
-ham    Ok lar... Joking wif u oni...
-spam   FreeMsg: Call now to claim your reward!
-spam   URGENT! You have won a prize. Call immediately!
+### 1. Clone the repository
+
+```
+git clone https://github.com/your-username/scam-bot.git
+cd scam-bot
 ```
 
-### Characteristics:
+---
 
-* Informal language, abbreviations, and slang
-* Presence of URLs, phone numbers, and promotional phrases
-* Real-world noise (misspellings, shorthand)
+### 2. Create virtual environment
+
+```
+python -m venv venv
+venv\Scripts\activate   # Windows
+```
 
 ---
 
-## 6. Applications
+### 3. Install dependencies
 
-The dataset is widely applicable across multiple domains:
-
-### 6.1 Machine Learning
-
-* Binary text classification
-* Supervised learning (Naive Bayes, SVM, Logistic Regression)
-* Deep learning (RNNs, LSTMs, Transformers)
-
-### 6.2 Natural Language Processing
-
-* Tokenization and text normalization
-* Feature extraction (TF-IDF, embeddings)
-* Sequence modeling
-
-### 6.3 Cybersecurity & Communication Systems
-
-* SMS spam filtering systems
-* Fraud and phishing detection
-* Intelligent messaging bots
+```
+pip install -r requirements.txt
+```
 
 ---
 
-## 7. Research Reference
+### 4. Run locally
 
-If this dataset is utilized in academic or industrial work, the following citation is recommended:
-
-> Almeida, T.A., Gómez Hidalgo, J.M., Yamakami, A.
-> *Contributions to the Study of SMS Spam Filtering: New Collection and Results*
-> Proceedings of the 2011 ACM Symposium on Document Engineering (DOCENG'11)
+```
+uvicorn src.app:app --reload
+```
 
 ---
 
-## 8. Contributors & Acknowledgments
+## 🌐 Deployment (Railway)
 
-**Primary Authors:**
+1. Push code to GitHub
+2. Connect repo to Railway
+3. Add **Start Command**:
 
-* Tiago Agostinho de Almeida
-* José María Gómez Hidalgo
+```
+uvicorn src.app:app --host 0.0.0.0 --port $PORT
+```
 
-**Acknowledgment:**
-
-* Dr. Min-Yen Kan and the NUS research team for providing access to the SMS Corpus.
-
----
-
-## 9. Licensing & Legal Notice
-
-The dataset is distributed under the following terms:
-
-* Provided **free of charge for research and educational use**
-* No warranties are expressed or implied
-* Users assume full responsibility for:
-
-  * Data usage
-  * Modifications
-  * Derived applications
-
-### Limitations:
-
-* Not guaranteed to be error-free
-* Not suitable as a sole source for production-critical systems without validation
+4. Deploy 🚀
+5. Generate public domain
 
 ---
 
-## 10. Limitations
+## 📲 Twilio WhatsApp Integration
 
-* **Class imbalance** may bias models toward ham predictions
-* Dataset is limited to **English SMS messages**
-* Does not reflect **modern spam trends** (e.g., advanced phishing, multimedia scams)
-* Static dataset — does not evolve with new spam techniques
+1. Go to Twilio Sandbox
+2. Join using provided code (via WhatsApp)
+3. Set webhook URL:
 
----
+```
+https://your-app-name.up.railway.app/webhook
+```
 
-## 11. Recommendations for Practical Use
-
-To maximize effectiveness in real-world applications:
-
-* Combine with **recent datasets** for better generalization
-* Apply **data augmentation techniques**
-* Use **transformer-based models** for improved accuracy
-* Implement **continuous retraining pipelines**
+4. Method: **POST**
 
 ---
 
-## 12. Conclusion
+## 🔌 API Endpoints
 
-The SMS Spam Collection v1 remains a foundational dataset in spam detection research, offering:
+### GET `/`
 
-* Real-world message diversity
-* Clean labeling for supervised learning
-* Strong baseline for model benchmarking
+Check API status
 
-It is particularly valuable for **prototyping, experimentation, and educational purposes**, and can serve as a stepping stone toward more advanced, production-grade systems.
+```
+{
+  "status": "API running"
+}
+```
+
+---
+
+### POST `/webhook`
+
+Handles incoming WhatsApp messages
+
+#### Input:
+
+* Form-data (`Body`)
+
+#### Output:
+
+* XML response (Twilio format)
+
+---
+
+## 🧪 Example Usage
+
+### Input:
+
+```
+You won a free lottery! Click now!
+```
+
+### Output:
+
+```
+⚠️ Scam detected!
+```
+
+---
+
+### Input:
+
+```
+Hello
+```
+
+### Output:
+
+```
+Hello 👋 Aamish here! Send me a message and I’ll check it.
+```
+
+---
+
+## ⚠️ Current Limitation
+
+* Uses **keyword-based detection** (basic logic)
+* Not fully AI-powered yet
+* Limited to Twilio Sandbox users (not public)
+
+---
+
+## 🔥 Future Improvements
+
+* 🤖 Integrate HuggingFace ML model
+* 📊 Add analytics & logging
+* 🌍 Move to WhatsApp Business API (public access)
+* 🧠 Improve detection accuracy (NLP models)
+* 💬 Multi-step conversational flow
+
+---
+
+## 📌 Status
+
+✅ Fully deployed
+✅ WhatsApp bot working
+✅ Stable API
+🚧 AI upgrade pending
+
+---
+
+## 👨‍💻 Author
+
+**Aamish Ali**
+
+---
+
+## 📄 License
+
+This project is open-source and available for educational and development purposes.
+
+---
+
+## ⭐ Contribution
+
+Feel free to fork, improve, and submit pull requests.
+
+---
+
+## 💡 Final Note
+
+This project demonstrates how to build a **real-world AI-powered chatbot pipeline** from scratch — including backend, deployment, and messaging integration.
 
 ---
