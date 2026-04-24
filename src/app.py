@@ -37,7 +37,7 @@ async def whatsapp_reply(request: Request):
 
         total_messages += 1
 
-        # ✅ FIXED Greeting (IMPORTANT FIX)
+        # ✅ Greeting (FIXED)
         if raw_lower in ["hi", "hello", "hey"]:
             reply = (
                 "Hello 👋\n"
@@ -49,38 +49,16 @@ async def whatsapp_reply(request: Request):
         else:
             # 🔥 ABUSE DETECTION
             abuse_words = [
-                 "kutta","Kutta","kameena","Kameena","ghada","Ghada","bkl","BKL","behn ka lora","Behn Ka Lora",
-                "behnchod","Behnchod","donkey","Donkey","ullu","Ullu","gandu","Gandu","gando","Gando",
-                "loru","Loru","chutiya","Chutiya","madrchod","Madrchod","lan","Lan","lun","Lun",
-                "gand maru","Gand Maru","idiot","Idiot","stupid","Stupid","loser","Loser","bsdk","BSDK",
-                "fool","Fool","harami","Harami","haraamzada","Haraamzada","haraami","Haraami","kanjar","Kanjar",
-                "kanjri","Kanjri","randi","Randi","kutti","Kutti","kuttiya","Kuttiya","kuttey","Kuttey",
-                "kamina","Kamina","kamini","Kamini","bewakoof","Bewakoof","bewaqoof","Bewaqoof",
-                "pagal","Pagal","paagal","Paagal","mental","Mental","jahil","Jahil","jaahil","Jaahil",
-                "badmaash","Badmaash","badtameez","Badtameez","badsoorat","Badsoorat","ghatiya","Ghatiya",
-                "ghaleez","Ghaleez","ghalat","Ghalat","faltu","Faltu","nikamma","Nikamma","nalayak","Nalayak",
-                "ullu ka pattha","Ullu Ka Pattha","ullu ka patha","Ullu Ka Patha","ullu ke pathe","Ullu Ke Pathe",
-                "chawal","Chawal","charsi","Charsi","nashedi","Nashedi","lafanga","Lafanga","luchcha","Luchcha",
-                "lucha","Lucha","lanti","Lanti","lanti aadmi","Lanti Aadmi","kameenay","Kameenay","kamino","Kamino",
-                "besharam","Besharam","beghairat","Beghairat","beghairati","Beghairati","bayghairat","Bayghairat",
-                "bayhaya","Bayhaya","behaya","Behaya","sharam nahi","Sharam Nahi","tameez nahi","Tameez Nahi",
-                "fuck","Fuck","fucker","Fucker","fucking","Fucking","shit","Shit","bullshit","Bullshit",
-                "asshole","Asshole","bastard","Bastard","jerk","Jerk","dumb","Dumb","moron","Moron",
-                "retard","Retard","trash","Trash","garbage","Garbage","scum","Scum","pig","Pig","dog","Dog",
-                "cheap","Cheap","low life","Low Life","pathetic","Pathetic","useless","Useless","worthless","Worthless",
-                "nonsense","Nonsense","idiotic","Idiotic","stupid idiot","Stupid Idiot","bloody fool","Bloody Fool",
-                "gandi aulaad","Gandi Aulaad","haram ki aulaad","Haram Ki Aulaad","haramzada","Haramzada",
-                "gandi nasal","Gandi Nasal","kuttay ki aulaad","Kuttay Ki Aulaad","kamini nasal","Kamini Nasal",
-                "chodu","Chodu","chodu aadmi","Chodu Aadmi","chutiye","Chutiye","chutmar","Chutmar",
-                "lund","Lund","lunday","Lunday","lunn","Lunn","lora","Lora","loray","Loray","lorey","Lorey",
-                "gand","Gand","gandi","Gandi","ganday","Ganday","gandi soch","Gandi Soch","gand ka keera","Gand Ka Keera",
-                "gand ka ilaj","Gand Ka Ilaj","gand phat","Gand Phat","gand fat gayi","Gand Fat Gayi",
-                "ullu ka dimagh","Ullu Ka Dimagh","dimagh kharab","Dimagh Kharab","dimagh se paidal","Dimagh Se Paidal",
-                "dimagh ka dahi","Dimagh Ka Dahi","andha","Andha","andhi aulaad","Andhi Aulaad",
-                "chor","Chor","dakait","Dakait","fraudiya","Fraudiya","fraud","Fraud","scammer","Scammer",
-                "dhokebaaz","Dhokebaaz","dhokeybaaz","Dhokeybaaz","jhoota","Jhoota","jhooti","Jhooti",
-                "bakwaas","Bakwaas","bakwaasi","Bakwaasi","faltu baat","Faltu Baat"
-                ]
+                "kutta","kameena","ghada","bkl","behn ka lora","behnchod","donkey","ullu",
+                "gandu","gando","loru","chutiya","madrchod","lan","lun","gand maru",
+                "idiot","stupid","loser","bsdk","fool","harami","haraamzada","kanjar",
+                "randi","kutti","kamina","bewakoof","pagal","mental","jahil",
+                "badmaash","badtameez","ghatiya","faltu","nikamma","nalayak",
+                "fuck","fucker","shit","bullshit","asshole","bastard","jerk",
+                "moron","retard","trash","garbage","scum","dog","pathetic",
+                "useless","worthless","idiotic","bloody fool","chodu","lund","lora",
+                "gand","chor","dakait","fraud","scammer","dhokebaaz","jhoota","bakwaas"
+            ]
 
             name_variations = ["aamish", "amish"]
 
@@ -96,20 +74,19 @@ async def whatsapp_reply(request: Request):
                         media_type="application/xml"
                     )
 
-            # 🔥 SCAM DETECTION (IMPROVED)
+            # 🔥 SCAM DETECTION
             scam_keywords = [
-                # basic
                 "win","won","free","lottery","prize","claim",
                 "click","link","urgent","offer","cash",
                 "reward","gift","congratulations","selected",
 
-                # phishing / banking
+                # phishing
                 "verify","account","verification","unauthorized",
                 "login attempt","suspended","secure link",
                 "bank","security alert","update","confirm identity",
                 "limited time","24 hours",
 
-                # Urdu / Roman Urdu
+                # Urdu
                 "mubarak","inaam","hasil","rabta","foran",
                 "jeeto","bisp","rupay","maloomat"
             ]
@@ -117,13 +94,11 @@ async def whatsapp_reply(request: Request):
             matched = [word for word in scam_keywords if word in text]
             score = len(matched)
 
-            # extra signals
             if "link" in text:
                 score += 1
             if "number" in text:
                 score += 1
 
-            # 🔥 STRONG DETECTION
             if score >= 2 or any(x in text for x in ["verify","unauthorized","bank","login"]):
                 scam_count += 1
                 reply = (
@@ -143,11 +118,12 @@ async def whatsapp_reply(request: Request):
                     "💬 Feel free to send another message for verification."
                 )
 
-       return Response(
-         content=f"<Response><Message>{reply}</Message></Response>",
-           media_type="application/xml",
+        # ✅ FIXED RETURN (proper indentation)
+        return Response(
+            content=f"<Response><Message>{reply}</Message></Response>",
+            media_type="application/xml",
             headers={"Content-Type": "text/xml"}
-             )
+        )
 
     except Exception as e:
         return Response(
