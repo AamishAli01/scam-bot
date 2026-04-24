@@ -1,23 +1,12 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import Response
-import pickle
 import re
 
 app = FastAPI()
 
-# 🔥 load ML model
-model = pickle.load(open("model.pkl", "rb"))
-vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
-
-# analytics
+# analytics (temporary memory)
 total_messages = 0
 scam_count = 0
-
-def clean_text(text):
-    text = text.lower()
-    text = re.sub(r"http\S+", " link ", text)
-    text = re.sub(r"\d+", " number ", text)
-    return text
 
 @app.get("/")
 def home():
@@ -30,6 +19,12 @@ def stats():
         "scam_detected": scam_count
     }
 
+def clean_text(text):
+    text = text.lower()
+    text = re.sub(r"http\S+", " link ", text)
+    text = re.sub(r"\d+", " number ", text)
+    return text
+
 @app.post("/webhook")
 async def whatsapp_reply(request: Request):
     global total_messages, scam_count
@@ -41,8 +36,8 @@ async def whatsapp_reply(request: Request):
 
         total_messages += 1
 
-        # ✅ Greeting (SAME)
-        if text in ["hi", "hello", "hey"]:
+        # ✅ Greeting (same)
+        if any(word in text for word in ["hi", "hello", "hey"]):
             reply = (
                 "Hello 👋\n"
                 "I'm Aamish AI — your scam detection assistant.\n\n"
@@ -51,7 +46,7 @@ async def whatsapp_reply(request: Request):
             )
 
         else:
-            # 🔥 ABUSE DETECTION (SAME)
+            # 🔥 ABUSE DETECTION
             abuse_words = [
                "kutta","Kutta","kameena","Kameena","ghada","Ghada","bkl","BKL","behn ka lora","Behn Ka Lora",
 "behnchod","Behnchod","donkey","Donkey","ullu","Ullu","gandu","Gandu","gando","Gando",
@@ -101,16 +96,37 @@ async def whatsapp_reply(request: Request):
                         media_type="application/xml"
                     )
 
-            # 🔥 ML MODEL PREDICTION
-            vec = vectorizer.transform([raw_text])
-            pred = model.predict(vec)[0]
+            # 🔥 MULTI-LANGUAGE SCAM DETECTION
+            scam_keywords = [
+                # English
+                "win", "won", "free", "lottery", "prize", "claim",
+                "click", "link", "urgent", "offer", "cash",
+                "reward", "gift", "congratulations", "selected",
+                "limited", "act now",
 
-            if pred == 1:
+                # Roman Urdu / Urdu
+                "mubarak", "inaam", "hasil", "rabta", "foran",
+                "jeeto", "bisp", "rupay", "rs", "amount",
+                "maloomat", "number select", "cash prize"
+            ]
+
+            matched = [word for word in scam_keywords if word in text]
+
+            score = len(matched)
+
+            # extra signals
+            if "link" in text:
+                score += 1
+            if "number" in text:
+                score += 1
+
+            if score >= 2:
                 scam_count += 1
                 reply = (
                     "⚠️ Potential Scam Detected\n\n"
                     "🔍 Analysis:\n"
-                    "- Message classified as suspicious using AI model\n\n"
+                    f"- Suspicious keywords identified: {', '.join(matched)}\n"
+                    "- Message structure resembles common scam patterns\n\n"
                     "🛡️ Recommendation:\n"
                     "Avoid clicking links or sharing personal information.\n\n"
                     "💬 You can send another message for analysis."
