@@ -19,14 +19,20 @@ async def whatsapp_reply(request: Request):
         if text in ["hi", "hello", "hey"]:
             reply = "Hello 👋 Aamish here! Send me a message and I’ll check it."
 
-        # Simple scam logic (temporary)
-        elif any(word in text for word in ["win", "free", "lottery", "prize"]):
-            reply = "⚠️ Scam detected!"
-
         else:
-            reply = "✅ This looks safe."
+            # Improved scam keywords
+            scam_keywords = [
+                "win", "won", "free", "lottery", "prize", "claim",
+                "click", "link", "urgent", "offer", "cash",
+                "reward", "gift", "congratulations", "selected",
+                "limited", "act now"
+            ]
 
-        # Twilio response format (XML)
+            if any(word in text for word in scam_keywords):
+                reply = "⚠️ Scam detected!"
+            else:
+                reply = "✅ This looks safe."
+
         return Response(
             content=f"<Response><Message>{reply}</Message></Response>",
             media_type="application/xml"
