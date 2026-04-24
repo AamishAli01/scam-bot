@@ -98,16 +98,21 @@ async def whatsapp_reply(request: Request):
 
             # 🔥 MULTI-LANGUAGE SCAM DETECTION
             scam_keywords = [
-                # English
+                 # basic
                 "win", "won", "free", "lottery", "prize", "claim",
                 "click", "link", "urgent", "offer", "cash",
                 "reward", "gift", "congratulations", "selected",
-                "limited", "act now",
 
-                # Roman Urdu / Urdu
+                # 🔥 phishing / banking
+                "verify", "verify account", "account verification",
+                "unauthorized", "login attempt", "suspended",
+                "secure link", "bank account", "security alert",
+                "update details", "confirm identity",
+                "limited time", "within 24 hours",
+
+                # Urdu / Roman Urdu
                 "mubarak", "inaam", "hasil", "rabta", "foran",
-                "jeeto", "bisp", "rupay", "rs", "amount",
-                "maloomat", "number select", "cash prize"
+                "jeeto", "bisp", "rupay", "maloomat"
             ]
 
             matched = [word for word in scam_keywords if word in text]
@@ -120,7 +125,7 @@ async def whatsapp_reply(request: Request):
             if "number" in text:
                 score += 1
 
-            if score >= 2:
+            if score >= 2 or "verify" in text or "unauthorized" in text:
                 scam_count += 1
                 reply = (
                     "⚠️ Potential Scam Detected\n\n"
