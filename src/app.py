@@ -28,6 +28,14 @@ def home():
 def predict(text: str):
     load_model()
 
+    # 👋 greeting logic
+    text_lower = text.lower()
+    if text_lower in ["hi", "hello", "hey"]:
+        return {
+            "text": text,
+            "response": "Hello 👋 Aamish Scam Detector here! Enter your message to check!"
+        }
+
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True)
